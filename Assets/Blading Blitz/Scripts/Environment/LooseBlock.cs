@@ -16,7 +16,7 @@ namespace Blading_Blitz.Scripts.Environment
         private void RestartLevel()
         {
             Debug.Log("Try Again");
-            FindObjectOfType<PlayerController>().RespawnPlayer();
+            FindObjectOfType<PlayerSpawnSystem>().RespawnPlayer();
         }
     }
 }
