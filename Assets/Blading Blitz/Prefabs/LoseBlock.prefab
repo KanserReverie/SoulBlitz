@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 4420415514268628548}
   - component: {fileID: 4420415514268628547}
   m_Layer: 0
-  m_Name: LooseBlock
+  m_Name: LoseBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

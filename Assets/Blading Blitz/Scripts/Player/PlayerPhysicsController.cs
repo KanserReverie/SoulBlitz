@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 namespace Blading_Blitz.Scripts.Player
 {
     public class PlayerPhysicsController : MonoBehaviour
@@ -10,6 +11,14 @@ namespace Blading_Blitz.Scripts.Player
         {
             playerController = GetComponent<PlayerController>();
             playerRigidbody2D = GetComponentInChildren<Rigidbody2D>();
+        }
+
+        /// <summary>
+        /// Will rotate the player so it is in the upward position
+        /// </summary>
+        public void RotatePlayerUpRight()
+        {
+            playerRigidbody2D.rotation = 0;
         }
 
         /// <summary>

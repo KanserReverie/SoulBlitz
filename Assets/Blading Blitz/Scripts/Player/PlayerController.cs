@@ -7,18 +7,22 @@ namespace Blading_Blitz.Scripts.Player
     [RequireComponent(typeof(PlayerStateMachine))]
     [RequireComponent(typeof(PlayerSpawnSystem))]
     [RequireComponent(typeof(PlayerPhysicsController))]
+    
     public class PlayerController : MonoBehaviour
     {
         private PlayerPhysicsController playerPhysicsController;
+        private PlayerGroundChecker playerGroundChecker;
         public PlayerStateMachine PlayerStateMachine { get; private set; }
 
-        [SerializeField] private float rollingSpeed = 4;
-        [SerializeField] private float crouchingSpeed = 6;
-        [SerializeField] private float jumpForce = 6;
-        
+        [SerializeField] private float rollingSpeed = 4f;
+        [SerializeField] private float crouchingSpeed = 6f;
+        [SerializeField] private float jumpForce = 6f;
+
         private void Awake()
         {
             PlayerStateMachine = GetComponent<PlayerStateMachine>();
+            playerGroundChecker = GetComponentInChildren<PlayerGroundChecker>();
+            playerGroundChecker.SetPlayerController(this);
             playerPhysicsController = GetComponent<PlayerPhysicsController>();
         }
         
@@ -37,6 +41,8 @@ namespace Blading_Blitz.Scripts.Player
                 case PlayerStates.Jumping:
                     playerPhysicsController.ImpulseForcePlayerUpward(jumpForce);
                     break;
+                case PlayerStates.Falling:
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(stateEntering), stateEntering, null);
             }
@@ -51,12 +57,17 @@ namespace Blading_Blitz.Scripts.Player
             switch (currentState)
             {
                 case PlayerStates.Rolling:
+                    playerPhysicsController.RotatePlayerUpRight();
                     playerPhysicsController.MovePlayerForwardAt(rollingSpeed);
                     break;
                 case PlayerStates.Crouching:
                     playerPhysicsController.MovePlayerForwardAt(crouchingSpeed);
+                    playerPhysicsController.RotatePlayerUpRight();
                     break;
                 case PlayerStates.Jumping:
+                    playerPhysicsController.RotatePlayerUpRight();
+                    break;
+                case PlayerStates.Falling:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(currentState), currentState, null);
@@ -72,14 +83,23 @@ namespace Blading_Blitz.Scripts.Player
                 if (buttonPosition > 0.5f)
                 {
                     PlayerStateMachine.ButtonPressed();
-                    Debug.Log("Button Pressed");
                 }
                 else
                 {
                     PlayerStateMachine.ButtonReleased();
-                    Debug.Log("Button Released");
                 }
             }
+        }
+
+        public void OnHitGround()
+        {
+            PlayerStateMachine.HitGround();
+        }
+        
+        public void OnLeaveGround()
+        {
+            PlayerStateMachine.LeaveGround();
+            
         }
     }
 }
